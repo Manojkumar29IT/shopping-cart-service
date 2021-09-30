@@ -6,8 +6,8 @@ const express = require('express'),
 
 const cors = require('cors');
 
-const User = require('../model/user');
-const Item = require('../model/item');
+const User = require('./model/user');
+const Item = require('./model/item');
 
 const corsOpts = {
     origin: '*',
@@ -16,10 +16,13 @@ const corsOpts = {
         'POST',
         'DELETE',
         'OPTION'
-    ]
+    ],
+    allowedHeaders: [
+        'Content-Type',
+    ],
 };
 app.use(cors(corsOpts));
-app.use(cors());
+// app.use(cors());
 
 // support parsing of application/json type post data
 app.use(bodyParser.json());
@@ -93,31 +96,35 @@ app.delete('/item/:item_id', function (req, res) {
 })
 
 app.post('/user', function (req, res) {
-    const user = new UserModel(req.body);
-    user.save(function (err) {
-        if (err) {
-            response.status = 'Error';
-            response.message = 'Error occurred while saving user';
-        } else {
-            response.status = 'Success';
-            response.message = 'User added successfully';
-        }
-        sendResponse(res, response);
-    })
+    setTimeout(function () {
+        const user = new UserModel(req.body);
+        user.save(function (err) {
+            if (err) {
+                response.status = 'Error';
+                response.message = 'Error occurred while saving user';
+            } else {
+                response.status = 'Success';
+                response.message = 'User added successfully';
+            }
+            sendResponse(res, response);
+        })
+    }, 10000);
 })
 
 app.post('/login', function (req, res) {
-    UserModel.findOne({ email: req.body.email, password: req.body.password }, function (err, user) {
-        if (err) {
-            response.status = 'Error';
-            response.message = 'Error occurred while fetching user';
-        }
-        else {
-            response.status = 'Success';
-            response.message = user;
-        }
-        sendResponse(res, response);
-    });
+    setTimeout(function () {
+        UserModel.findOne({ email: req.body.email, password: req.body.password }, function (err, user) {
+            if (err) {
+                response.status = 'Error';
+                response.message = 'Error occurred while fetching user';
+            }
+            else {
+                response.status = 'Success';
+                response.message = user;
+            }
+            sendResponse(res, response);
+        });
+    }, 10000);
 })
 
 app.options('/user', function (req, res) {
@@ -136,9 +143,9 @@ const sendResponse = (res, response) => {
     res.send(JSON.stringify(response));
 };
 
-const port = 4000;
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
-})
+// const port = 4000;
+// app.listen(port, () => {
+//     console.log(`Example app listening at http://localhost:${port}`)
+// })
 
-// module.exports.handler = serverless(app);
+module.exports.handler = serverless(app);
