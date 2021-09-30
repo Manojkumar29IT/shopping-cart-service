@@ -54,6 +54,12 @@ functions:
       - httpApi:
           path: /user
           method: POST
+      - httpApi:
+          path: /login
+          method: POST
+      - httpApi:
+          path: /login
+          method: OPTIONS
 
 plugins:
   - serverless-offline

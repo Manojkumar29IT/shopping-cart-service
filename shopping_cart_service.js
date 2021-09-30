@@ -15,10 +15,11 @@ const corsOpts = {
         'GET',
         'POST',
         'DELETE',
-        'OPTION'
+        'OPTIONS'
     ],
     allowedHeaders: [
-        'Content-Type',
+        'content-type',
+        'access-control-allow-origin'
     ],
 };
 app.use(cors(corsOpts));
@@ -96,35 +97,31 @@ app.delete('/item/:item_id', function (req, res) {
 })
 
 app.post('/user', function (req, res) {
-    setTimeout(function () {
-        const user = new UserModel(req.body);
-        user.save(function (err) {
-            if (err) {
-                response.status = 'Error';
-                response.message = 'Error occurred while saving user';
-            } else {
-                response.status = 'Success';
-                response.message = 'User added successfully';
-            }
-            sendResponse(res, response);
-        })
-    }, 10000);
+    const user = new UserModel(req.body);
+    user.save(function (err) {
+        if (err) {
+            response.status = 'Error';
+            response.message = 'Error occurred while saving user';
+        } else {
+            response.status = 'Success';
+            response.message = 'User added successfully';
+        }
+        sendResponse(res, response);
+    })
 })
 
 app.post('/login', function (req, res) {
-    setTimeout(function () {
-        UserModel.findOne({ email: req.body.email, password: req.body.password }, function (err, user) {
-            if (err) {
-                response.status = 'Error';
-                response.message = 'Error occurred while fetching user';
-            }
-            else {
-                response.status = 'Success';
-                response.message = user;
-            }
-            sendResponse(res, response);
-        });
-    }, 10000);
+    UserModel.findOne({ email: req.body.email, password: req.body.password }, function (err, user) {
+        if (err) {
+            response.status = 'Error';
+            response.message = 'Error occurred while fetching user';
+        }
+        else {
+            response.status = 'Success';
+            response.message = user;
+        }
+        sendResponse(res, response);
+    });
 })
 
 app.options('/user', function (req, res) {
@@ -139,13 +136,10 @@ app.options('/login', function (req, res) {
 
 const sendResponse = (res, response) => {
     res.status(200);
+    res.setHeader('access-control-allow-methods', 'GET, POST, PUT, PATCH, POST, DELETE, OPTIONS');
+    res.setHeader('access-control-allow-header', 'Content-Type');
     res.setHeader('content-type', 'application/json');
     res.send(JSON.stringify(response));
 };
-
-// const port = 4000;
-// app.listen(port, () => {
-//     console.log(`Example app listening at http://localhost:${port}`)
-// })
 
 module.exports.handler = serverless(app);
