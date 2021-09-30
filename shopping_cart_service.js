@@ -23,7 +23,6 @@ const corsOpts = {
     ],
 };
 app.use(cors(corsOpts));
-// app.use(cors());
 
 // support parsing of application/json type post data
 app.use(bodyParser.json());
@@ -56,11 +55,6 @@ app.get('/item', function (req, res) {
     });
 })
 
-app.options('/item', function (req, res) {
-    response.status = 'Success';
-    sendResponse(res, response);
-})
-
 app.post('/item', function (req, res) {
     const item = new ItemModel(req.body);
     item.save(function (err, item) {
@@ -76,7 +70,7 @@ app.post('/item', function (req, res) {
     })
 })
 
-app.options('/item/:item_id', function (req, res) {
+app.options('/item', function (req, res) {
     response.status = 'Success';
     sendResponse(res, response);
 })
@@ -96,6 +90,11 @@ app.delete('/item/:item_id', function (req, res) {
     });
 })
 
+app.options('/item/:item_id', function (req, res) {
+    response.status = 'Success';
+    sendResponse(res, response);
+})
+
 app.post('/user', function (req, res) {
     const user = new UserModel(req.body);
     user.save(function (err) {
@@ -110,6 +109,11 @@ app.post('/user', function (req, res) {
     })
 })
 
+app.options('/user', function (req, res) {
+    response.status = 'Success';
+    sendResponse(res, response);
+})
+
 app.post('/login', function (req, res) {
     UserModel.findOne({ email: req.body.email, password: req.body.password }, function (err, user) {
         if (err) {
@@ -122,11 +126,6 @@ app.post('/login', function (req, res) {
         }
         sendResponse(res, response);
     });
-})
-
-app.options('/user', function (req, res) {
-    response.status = 'Success';
-    sendResponse(res, response);
 })
 
 app.options('/login', function (req, res) {
