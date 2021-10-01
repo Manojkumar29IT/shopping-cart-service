@@ -60,12 +60,12 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
     
 ## Following are the API endpoints
 
-  GET /item
-  POST /item
-  OPTIONS /item
-  DELETE /item/:item_id
-  OPTIONS /item/:item_id
-  POST /user
-  OPTIONS /user
-  POST /login
-  OPTIONS /login
+    GET /item
+    POST /item
+    OPTIONS /item
+    DELETE /item/:item_id
+    OPTIONS /item/:item_id
+    POST /user
+    OPTIONS /user
+    POST /login
+    OPTIONS /login
